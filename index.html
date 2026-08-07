@@ -32,8 +32,6 @@
     color: #2c2c2a; text-align: center; font-family: inherit; width: 72px;
   }
   input[type=number]:focus { outline: none; }
-
-  /* Global range slider */
   input[type=range] {
     -webkit-appearance: none; appearance: none;
     height: 4px; border-radius: 2px;
@@ -50,8 +48,6 @@
     background: #fff; border: 1.5px solid #1B365D;
     cursor: pointer; box-sizing: border-box;
   }
-
-  /* Dual-handle complexity slider */
   .dual-slider-wrap { padding: 8px 0 4px; }
   .dual-slider-track-wrap {
     position: relative; height: 20px; margin: 10px 0;
@@ -75,8 +71,6 @@
   .dual-slider-pcts { display: flex; justify-content: space-between; margin-top: 10px; }
   .dual-slider-pct { font-size: 12px; color: #888780; display: flex; align-items: center; gap: 4px; }
   .dual-slider-pct strong { font-weight: 500; color: #2c2c2a; }
-
-  /* Buffer */
   .buffer-row {
     display: flex; align-items: center; gap: 14px;
     padding: 12px 0; border-top: 0.5px solid #d3d1c7; border-bottom: 0.5px solid #d3d1c7; margin: 12px 0;
@@ -84,8 +78,6 @@
   .buffer-label { font-size: 13px; color: #888780; white-space: nowrap; }
   .buffer-row input[type=range] { flex: 1; }
   .buffer-val { font-size: 13px; font-weight: 500; color: #2c2c2a; min-width: 36px; text-align: right; }
-
-  /* Activities */
   .activities-table { width: 100%; border-collapse: collapse; font-size: 13px; }
   .activities-table th {
     font-size: 11px; font-weight: 500; text-transform: uppercase;
@@ -125,8 +117,6 @@
   }
   .hrs-input:disabled { opacity: 0.3; cursor: not-allowed; }
   .hrs-input:focus { outline: none; }
-
-  /* Team */
   .team-layout { display: flex; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
   .people-block { display: flex; flex-direction: column; gap: 6px; }
   .people-label { font-size: 12px; color: #888780; }
@@ -146,28 +136,15 @@
     border-radius: 8px; padding: 10px 12px;
   }
   .formula-row {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    align-items: center;
-    gap: 12px;
-    padding: 3px 0;
+    display: grid; grid-template-columns: 1fr auto auto;
+    align-items: center; gap: 12px; padding: 3px 0;
   }
   .formula-label { font-size: 12px; color: #888780; }
-  .formula-rule {
-    font-size: 12px; color: #b4b2a9;
-    font-family: monospace; white-space: nowrap;
-    width: 72px; text-align: left;
-  }
-  .formula-result {
-    font-size: 12px; font-weight: 500; color: transparent;
-    background: transparent; border-radius: 6px;
-    padding: 2px 8px; min-width: 36px; text-align: center;
-  }
+  .formula-rule { font-size: 12px; color: #b4b2a9; font-family: monospace; white-space: nowrap; width: 72px; text-align: left; }
+  .formula-result { font-size: 12px; font-weight: 500; color: transparent; background: transparent; border-radius: 6px; padding: 2px 8px; min-width: 36px; text-align: center; }
   .formula-active .formula-label { color: #2c2c2a; font-weight: 500; }
   .formula-active .formula-rule { color: #1B365D; font-weight: 500; }
   .formula-active .formula-result { color: #fff; background: #1B365D; }
-
-  /* Results */
   .results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .result-card { background: #f5f4ed; border-radius: 8px; padding: 12px; text-align: center; }
   .result-val { font-size: 22px; font-weight: 500; color: #2c2c2a; line-height: 1.1; }
@@ -186,7 +163,6 @@
   .breakdown-name { color: #888780; }
   .breakdown-hrs { font-weight: 500; color: #2c2c2a; }
   .divider { height: 0.5px; background: #d3d1c7; margin: 12px 0; }
-
   .h2 {
     font-family: 'Newsreader', Georgia, serif; font-size: 22px; font-weight: 500;
     line-height: 1.2; color: #2c2c2a; margin-bottom: 4px;
@@ -194,16 +170,17 @@
   .h2-sub { font-size: 13px; color: #888780; margin-bottom: 20px; }
   .setting-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #888780; }
   .setting-item input[type=number] { width: 60px; }
-
   .download-btn {
     display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; padding: 11px 16px; border-radius: 8px;
-    background: #1B365D; color: #fff;
+    width: 100%; padding: 10px 16px; border-radius: 8px;
+    background: transparent; color: #1B365D;
     font-size: 13px; font-weight: 500; font-family: inherit;
-    border: none; cursor: pointer; margin-top: 14px;
-    transition: opacity 0.15s; letter-spacing: 0.01em;
+    border: 1px solid #1B365D;
+    cursor: pointer; margin-top: 14px;
+    transition: background 0.15s, color 0.15s;
+    letter-spacing: 0.01em;
   }
-  .download-btn:hover { opacity: 0.88; }
+  .download-btn:hover { background: #f0f3f8; }
   .download-btn:active { transform: scale(0.99); }
 </style>
 </head>
@@ -237,7 +214,7 @@
     </div>
   </div>
 
-  <p class="section-label section-gap">Activities <span style="font-size:12px;font-weight:400;text-transform:none;letter-spacing:0;color:#b4b2a9">hrs / screen per complexity</span></p>
+  <p class="section-label section-gap">Activities <span style="font-size:12px;font-weight:400;text-transform:none;letter-spacing:0;color:#b4b2a9">days / screen per complexity</span></p>
   <div class="card">
     <table class="activities-table">
       <thead><tr><th>Activity</th><th>Simple</th><th>Medium</th><th>High</th></tr></thead>
@@ -256,9 +233,7 @@
           <button class="step-btn" onclick="changePeople(1)">+</button>
         </div>
       </div>
-      <div class="capacity-block">
-        <div class="capacity-formula" id="formulaDisplay"></div>
-      </div>
+      <div class="capacity-block"><div class="capacity-formula" id="formulaDisplay"></div></div>
     </div>
   </div>
 
@@ -300,17 +275,17 @@ const ACTIVITIES = [
   { group: 'Design', items: [
     { id: 'wireframe',   name: 'Wireframe',                on: true,  s: 0.5,  m: 1.0,  h: 2.0 },
     { id: 'visual',      name: 'Visual design',            on: true,  s: 0.5,  m: 1.0,  h: 2.0 },
-    { id: 'content',     name: 'Content design',           on: false, s: 0.25, m: 0.75, h: 1.5 },
-    { id: 'prototype',   name: 'Prototype',                on: true,  s: 0.5,  m: 1.0,  h: 1.0 },
+    { id: 'content',     name: 'Content design',           on: false, s: 0.25, m: 0.5,  h: 1.0 },
+    { id: 'prototype',   name: 'Prototype',                on: true,  s: 0.25, m: 0.5,  h: 1.0 },
   ]},
   { group: 'Validation', items: [
     { id: 'usertesting', name: 'Usability testing',        on: false, s: 0.5,  m: 1.0,  h: 1.5 },
-    { id: 'feedback',    name: 'Feedback iteration',       on: true,  s: 1.0,  m: 2.0,  h: 2.0 },
+    { id: 'feedback',    name: 'Feedback iteration',       on: true,  s: 0.5,  m: 1.0,  h: 1.5 },
   ]},
   { group: 'Delivery', items: [
-    { id: 'a11y',        name: 'Accessibility annotation', on: true,  s: 0.25, m: 0.5,  h: 1.0 },
-    { id: 'handoff',     name: 'Dev handoff',              on: true,  s: 0.5,  m: 0.5,  h: 0.5 },
-    { id: 'designqa',    name: 'Design QA',                on: true,  s: 0.5,  m: 1.0,  h: 2.0 },
+    { id: 'a11y',        name: 'Accessibility annotation', on: true,  s: 0.25, m: 0.5,  h: 0.5 },
+    { id: 'handoff',     name: 'Dev handoff',              on: true,  s: 0.25, m: 0.25, h: 0.5 },
+    { id: 'designqa',    name: 'Design QA',                on: true,  s: 0.25, m: 0.5,  h: 1.0 },
   ]},
 ];
 
@@ -399,9 +374,9 @@ function renderActivities() {
             ${!act.on ? '<span class="off-badge">off</span>' : ''}
           </div>
         </td>
-        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.s}" min="0" max="24" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'s',this.value)"></td>
-        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.m}" min="0" max="24" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'m',this.value)"></td>
-        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.h}" min="0" max="24" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'h',this.value)"></td>
+        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.s}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'s',this.value)"></td>
+        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.m}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'m',this.value)"></td>
+        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.h}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'h',this.value)"></td>
       `;
       tbody.appendChild(tr);
     });
@@ -419,22 +394,25 @@ function calculate() {
   const sf = a / 100, mf = (b - a) / 100, hf = (100 - b) / 100;
   const sS = screens * sf, mS = screens * mf, hS = screens * hf;
 
-  let breakdown = [], totalHrs = 0;
+  let breakdown = [], totalDays = 0;
   activities.forEach(group => {
     group.items.forEach(act => {
       if (!act.on) return;
-      const hrs = sS * act.s + mS * act.m + hS * act.h;
-      breakdown.push({ name: act.name, hrs, group: group.group });
-      totalHrs += hrs;
+      const days = sS * act.s + mS * act.m + hS * act.h;
+      const hrs  = days * hpd;
+      breakdown.push({ name: act.name, hrs, days, group: group.group });
+      totalDays += days;
     });
   });
 
-  const withBuffer = totalHrs * (1 + bufPct / 100);
-  const soloDays   = withBuffer / hpd;
-  const eff        = effectiveCapacity(people);
-  const teamDays   = soloDays / eff;
+  const totalHrs    = totalDays * hpd;
+  const withBufDays = totalDays * (1 + bufPct / 100);
+  const withBufHrs  = withBufDays * hpd;
+  const soloDays    = withBufDays;
+  const eff         = effectiveCapacity(people);
+  const teamDays    = soloDays / eff;
 
-  document.getElementById('resHours').textContent  = Math.round(withBuffer);
+  document.getElementById('resHours').textContent  = Math.round(withBufHrs);
   document.getElementById('resDays').textContent   = soloDays.toFixed(1);
   document.getElementById('resWeeks').textContent  = (soloDays / 5).toFixed(1);
   document.getElementById('resMonths').textContent = (soloDays / 5 / 4.33).toFixed(1);
@@ -445,7 +423,7 @@ function calculate() {
   document.getElementById('teamDividerLabel').textContent =
     people === 1 ? 'solo (same as above)' : `${people} people, ${eff.toFixed(1)}x effective capacity`;
 
-  lastResult = { screens, hpd, bufPct, sf, mf, hf, people, eff, totalHrs, withBuffer, soloDays, teamDays, breakdown };
+  lastResult = { screens, hpd, bufPct, sf, mf, hf, people, eff, totalHrs, totalDays, withBufHrs, withBufDays, soloDays, teamDays, breakdown };
 
   let lastGroup = null;
   document.getElementById('breakdownList').innerHTML = breakdown.map(b => {
@@ -455,11 +433,11 @@ function calculate() {
       html += `<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:#b4b2a9;padding:8px 0 2px;${lastGroup !== null ? 'border-top:0.5px solid #d3d1c7;' : ''}">${b.group}</div>`;
       lastGroup = b.group;
     }
-    html += `<div class="breakdown-row"><span class="breakdown-name">${b.name}</span><span class="breakdown-hrs">${Math.round(b.hrs)} hrs</span></div>`;
+    html += `<div class="breakdown-row"><span class="breakdown-name">${b.name}</span><span class="breakdown-hrs">${b.days.toFixed(1)} days · ${Math.round(b.hrs)} hrs</span></div>`;
     return html;
   }).join('') + (bufPct > 0 ? `<div class="breakdown-row" style="border-top:0.5px solid #d3d1c7;">
     <span class="breakdown-name" style="color:#b4b2a9">Buffer (${bufPct}%)</span>
-    <span class="breakdown-hrs" style="color:#b4b2a9">+${Math.round(withBuffer - totalHrs)} hrs</span>
+    <span class="breakdown-hrs" style="color:#b4b2a9">+${(withBufDays - totalDays).toFixed(1)} days · +${Math.round(withBufHrs - totalHrs)} hrs</span>
   </div>` : '');
 }
 
@@ -481,7 +459,7 @@ function downloadExcel() {
     ['Effective capacity', r.eff],
     [],
     ['RESULTS'],
-    ['Total hours (with buffer)', Math.round(r.withBuffer)],
+    ['Total hours (with buffer)', Math.round(r.withBufHrs)],
     ['Solo days', parseFloat(r.soloDays.toFixed(1))],
     ['Solo weeks', parseFloat((r.soloDays / 5).toFixed(1))],
     ['Solo months', parseFloat((r.soloDays / 5 / 4.33).toFixed(1))],
@@ -494,18 +472,18 @@ function downloadExcel() {
   ['B6','B7','B8','B9'].forEach(c => { if (ws1[c]) ws1[c].z = '0%'; });
   XLSX.utils.book_append_sheet(wb, ws1, 'Summary');
 
-  const breakdownRows = [['Activity breakdown'], [], ['Group', 'Activity', 'Hours']];
-  r.breakdown.forEach(b => breakdownRows.push([b.group, b.name, Math.round(b.hrs)]));
-  if (r.bufPct > 0) breakdownRows.push(['', `Buffer (${r.bufPct}%)`, Math.round(r.withBuffer - r.totalHrs)]);
-  breakdownRows.push([], ['', 'Total', Math.round(r.withBuffer)]);
+  const breakdownRows = [['Activity breakdown'], [], ['Group', 'Activity', 'Days', 'Hours']];
+  r.breakdown.forEach(b => breakdownRows.push([b.group, b.name, parseFloat(b.days.toFixed(1)), Math.round(b.hrs)]));
+  if (r.bufPct > 0) breakdownRows.push(['', `Buffer (${r.bufPct}%)`, parseFloat((r.withBufDays - r.totalDays).toFixed(1)), Math.round(r.withBufHrs - r.totalHrs)]);
+  breakdownRows.push([], ['', 'Total', parseFloat(r.soloDays.toFixed(1)), Math.round(r.withBufHrs)]);
   const ws2 = XLSX.utils.aoa_to_sheet(breakdownRows);
-  ws2['!cols'] = [{ wch: 16 }, { wch: 26 }, { wch: 12 }];
+  ws2['!cols'] = [{ wch: 16 }, { wch: 26 }, { wch: 10 }, { wch: 12 }];
   XLSX.utils.book_append_sheet(wb, ws2, 'Activity Breakdown');
 
-  const configRows = [['Activity configuration'], [], ['Group', 'Activity', 'Active', 'Hrs/screen Simple', 'Hrs/screen Medium', 'Hrs/screen High']];
+  const configRows = [['Activity configuration'], [], ['Group', 'Activity', 'Active', 'Days/screen Simple', 'Days/screen Medium', 'Days/screen High']];
   activities.forEach(g => g.items.forEach(act => configRows.push([g.group, act.name, act.on ? 'Yes' : 'No', act.s, act.m, act.h])));
   const ws3 = XLSX.utils.aoa_to_sheet(configRows);
-  ws3['!cols'] = [{ wch: 14 }, { wch: 26 }, { wch: 10 }, { wch: 18 }, { wch: 18 }, { wch: 16 }];
+  ws3['!cols'] = [{ wch: 14 }, { wch: 26 }, { wch: 10 }, { wch: 19 }, { wch: 19 }, { wch: 17 }];
   XLSX.utils.book_append_sheet(wb, ws3, 'Activity Config');
 
   XLSX.writeFile(wb, 'ui-design-estimate.xlsx');
