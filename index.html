@@ -697,9 +697,9 @@ async function downloadExcel() {
   const PL = `B${pctRow.number}`, PM = `C${pctRow.number}`, PH = `D${pctRow.number}`;
 
   const scrRow = ws.addRow(['Screens', null, null, null]);
-  scrRow.getCell('B').value = { formula: `${S}*${PL}` }; scrRow.getCell('B').numFmt = '0.00';
-  scrRow.getCell('C').value = { formula: `${S}*${PM}` }; scrRow.getCell('C').numFmt = '0.00';
-  scrRow.getCell('D').value = { formula: `${S}*${PH}` }; scrRow.getCell('D').numFmt = '0.00';
+  scrRow.getCell('B').value = { formula: `${S}*${PL}` }; scrRow.getCell('B').numFmt = '0.0';
+  scrRow.getCell('C').value = { formula: `${S}*${PM}` }; scrRow.getCell('C').numFmt = '0.0';
+  scrRow.getCell('D').value = { formula: `${S}*${PH}` }; scrRow.getCell('D').numFmt = '0.0';
   const SL = `B${scrRow.number}`, SM = `C${scrRow.number}`, SH = `D${scrRow.number}`;
   ws.addRow([]);
 
@@ -725,10 +725,10 @@ async function downloadExcel() {
       if (!firstActRow) firstActRow = n;
       lastActRow = n;
       ['B','C','D'].forEach(c => { row.getCell(c).numFmt = '0.00'; });
-      row.getCell('E').value = { formula: `${SL}*B${n}*${HPD}` }; row.getCell('E').numFmt = '0.00';
-      row.getCell('F').value = { formula: `${SM}*C${n}*${HPD}` }; row.getCell('F').numFmt = '0.00';
-      row.getCell('G').value = { formula: `${SH}*D${n}*${HPD}` }; row.getCell('G').numFmt = '0.00';
-      row.getCell('H').value = { formula: `E${n}+F${n}+G${n}` }; row.getCell('H').numFmt = '0.00';
+      row.getCell('E').value = { formula: `${SL}*B${n}*${HPD}` }; row.getCell('E').numFmt = '0.0';
+      row.getCell('F').value = { formula: `${SM}*C${n}*${HPD}` }; row.getCell('F').numFmt = '0.0';
+      row.getCell('G').value = { formula: `${SH}*D${n}*${HPD}` }; row.getCell('G').numFmt = '0.0';
+      row.getCell('H').value = { formula: `E${n}+F${n}+G${n}` }; row.getCell('H').numFmt = '0.0';
     });
   });
   ws.addRow([]);
@@ -737,21 +737,21 @@ async function downloadExcel() {
   boldRow(ws, ['RESULTS']);
   const totRow = ws.addRow(['Total hours', null]);
   totRow.getCell('B').value = { formula: `SUM(H${firstActRow}:H${lastActRow})*(1+${BUF})` };
-  totRow.getCell('B').numFmt = '0.00';
+  totRow.getCell('B').numFmt = '0';
   const TOT = `B${totRow.number}`;
 
   const pRow = ws.addRow(['Person days', null, '', 'Person weeks', null, '', 'Person months', null]);
   const pn = pRow.number;
-  pRow.getCell('B').value = { formula: `${TOT}/${HPD}` }; pRow.getCell('B').numFmt = '0.00';
-  pRow.getCell('E').value = { formula: `B${pn}/5` };      pRow.getCell('E').numFmt = '0.00';
-  pRow.getCell('H').value = { formula: `E${pn}/5/4.33` }; pRow.getCell('H').numFmt = '0.00';
+  pRow.getCell('B').value = { formula: `${TOT}/${HPD}` }; pRow.getCell('B').numFmt = '0.0';
+  pRow.getCell('E').value = { formula: `B${pn}/5` };      pRow.getCell('E').numFmt = '0.0';
+  pRow.getCell('H').value = { formula: `E${pn}/5/4.33` }; pRow.getCell('H').numFmt = '0.0';
 
   if (r.people > 1) {
     const tRow = ws.addRow([`Team days (${r.people} people, ${r.eff.toFixed(1)}x capacity)`, null, '', 'Team weeks', null, '', 'Team months', null]);
     const tn = tRow.number;
-    tRow.getCell('B').value = { formula: `B${pn}/${r.eff.toFixed(4)}` }; tRow.getCell('B').numFmt = '0.00';
-    tRow.getCell('E').value = { formula: `B${tn}/5` };                    tRow.getCell('E').numFmt = '0.00';
-    tRow.getCell('H').value = { formula: `E${tn}/5/4.33` };               tRow.getCell('H').numFmt = '0.00';
+    tRow.getCell('B').value = { formula: `B${pn}/${r.eff.toFixed(4)}` }; tRow.getCell('B').numFmt = '0.0';
+    tRow.getCell('E').value = { formula: `B${tn}/5` };                    tRow.getCell('E').numFmt = '0.0';
+    tRow.getCell('H').value = { formula: `E${tn}/5/4.33` };               tRow.getCell('H').numFmt = '0.0';
   }
 
   // ── Sheet 2: Activity Config ──
