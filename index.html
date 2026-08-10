@@ -744,14 +744,14 @@ async function downloadExcel() {
   const pn = pRow.number;
   pRow.getCell('B').value = { formula: `${TOT}/${HPD}` }; pRow.getCell('B').numFmt = '0.0';
   pRow.getCell('E').value = { formula: `B${pn}/5` };      pRow.getCell('E').numFmt = '0.0';
-  pRow.getCell('H').value = { formula: `E${pn}/5/4.33` }; pRow.getCell('H').numFmt = '0.0';
+  pRow.getCell('H').value = { formula: `E${pn}/4.33` }; pRow.getCell('H').numFmt = '0.0';
 
   if (r.people > 1) {
     const tRow = ws.addRow([`Team days (${r.people} people, ${r.eff.toFixed(1)}x capacity)`, null, '', 'Team weeks', null, '', 'Team months', null]);
     const tn = tRow.number;
     tRow.getCell('B').value = { formula: `B${pn}/${r.eff.toFixed(4)}` }; tRow.getCell('B').numFmt = '0.0';
     tRow.getCell('E').value = { formula: `B${tn}/5` };                    tRow.getCell('E').numFmt = '0.0';
-    tRow.getCell('H').value = { formula: `E${tn}/5/4.33` };               tRow.getCell('H').numFmt = '0.0';
+    tRow.getCell('H').value = { formula: `E${tn}/4.33` };                 tRow.getCell('H').numFmt = '0.0';
   }
 
   // ── Sheet 2: Activity Config ──
