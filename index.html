@@ -14,7 +14,17 @@
     font-family: 'Inter', sans-serif;
     color: #2c2c2a;
     min-height: 100vh;
-    padding: 2rem 1rem 4rem;
+    padding: 4rem 1rem 4rem;
+  }
+  .site-header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #f5f4ed;
+    border-bottom: 0.5px solid #d3d1c7;
+    padding: 0.6rem 1rem;
+  }
+  .site-header-inner {
+    max-width: 680px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
   }
   .container { max-width: 680px; margin: 0 auto; }
   .section-label {
@@ -74,7 +84,7 @@
   .pct-screens { font-size: 11px; color: #b4b2a9; }
   .buffer-row {
     display: flex; align-items: center; gap: 14px;
-    padding: 12px 0; border-bottom: 0.5px solid #d3d1c7; margin: 0 0 12px;
+    padding: 12px 0; margin: 0 0 12px;
   }
   .buffer-label { font-size: 13px; color: #888780; white-space: nowrap; }
   .buffer-row input[type=range] { flex: 1; }
@@ -85,13 +95,13 @@
     letter-spacing: 0.06em; color: #888780; padding: 4px 8px 8px; text-align: center;
   }
   .activities-table th:first-child { text-align: left; padding-left: 0; }
-  .activities-table td { padding: 7px 8px; border-top: 0.5px solid #d3d1c7; vertical-align: middle; }
+  .activities-table td { padding: 10px 8px; vertical-align: middle; }
   .activities-table td:first-child { padding-left: 0; }
   .group-header td {
-    padding: 10px 0 4px; font-size: 10px; font-weight: 500; text-transform: uppercase;
-    letter-spacing: 0.08em; color: #b4b2a9; border-top: 0.5px solid #d3d1c7;
+    padding: 20px 0 4px; font-size: 10px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #b4b2a9;
   }
-  .group-header:first-child td { border-top: none; padding-top: 0; }
+  .group-header:first-child td { padding-top: 0; }
   .activity-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
   .toggle-pill {
     display: inline-block; width: 38px; height: 22px; border-radius: 11px;
@@ -154,16 +164,15 @@
   .result-sublabel { font-size: 10px; color: #b4b2a9; margin-top: 2px; }
   .section-divider { display: flex; align-items: center; gap: 10px; margin: 4px 0 10px; }
   .section-divider span { font-size: 11px; color: #b4b2a9; white-space: nowrap; }
-  .section-divider-line { flex: 1; height: 0.5px; background: #d3d1c7; }
-  .team-adjusted { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .section-divider-line { flex: 1; }
+  .team-adjusted { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
   .breakdown-row {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 6px 0; border-top: 0.5px solid #d3d1c7; font-size: 13px;
+    padding: 8px 0; font-size: 13px;
   }
-  .breakdown-row:first-child { border-top: none; }
   .breakdown-name { color: #888780; }
   .breakdown-hrs { font-weight: 500; color: #2c2c2a; }
-  .divider { height: 0.5px; background: #d3d1c7; margin: 12px 0; }
+  .divider { margin: 8px 0; }
   .h2 {
     font-family: 'Newsreader', Georgia, serif; font-size: 22px; font-weight: 500;
     line-height: 1.2; color: #2c2c2a; margin-bottom: 4px;
@@ -183,6 +192,32 @@
   }
   .download-btn:hover { background: #f0f3f8; }
   .download-btn:active { transform: scale(0.99); }
+  .est-controls { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 16px; }
+  .est-ctrl { display: flex; flex-direction: row; align-items: center; gap: 8px; flex: 1; }
+  .est-ctrl-label {
+    font-size: 11px; font-weight: 500; color: #888780;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  }
+  .big-number-input {
+    width: 80px; font-size: 22px; font-weight: 500; padding: 5px 8px;
+    text-align: left; border: 0.5px solid #b4b2a9; border-radius: 8px;
+    background: #f5f4ed; font-family: inherit; color: #2c2c2a;
+  }
+  .big-number-input:focus { outline: none; }
+  input[type=number]::-webkit-inner-spin-button { opacity: 1; }
+  .info-btn {
+    background: none; border: none; cursor: pointer; color: #b4b2a9;
+    padding: 0; display: flex; align-items: center; line-height: 1;
+  }
+  .info-btn:hover { color: #1B365D; }
+  .people-popover {
+    display: none; position: absolute; top: calc(100% + 8px); left: 0; z-index: 20;
+    background: #fff; border: 0.5px solid #d3d1c7; border-radius: 10px;
+    padding: 10px 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); min-width: 220px;
+  }
+  .people-popover.open { display: block; }
+  .buffer-flex { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 140px; }
   .cog-btn {
     background: none; border: none; cursor: pointer; padding: 6px;
     color: #888780; display: flex; align-items: center;
@@ -261,8 +296,8 @@
 </style>
 </head>
 <body>
-<div class="container">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+<header class="site-header">
+  <div class="site-header-inner">
     <p class="h2">UI Design Estimator</p>
     <button class="cog-btn" onclick="openConfig()" title="Configure defaults">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -271,28 +306,32 @@
       </svg>
     </button>
   </div>
-
-  <p class="section-label section-gap">Scope</p>
-  <div class="card">
-    <div style="display:flex;gap:24px;flex-wrap:wrap;">
-      <div class="setting-item"><span>Total screens</span><input type="number" id="totalScreens" min="1" max="500" value="8" step="1"></div>
-      <div class="setting-item"><span>Hours per day</span><input type="number" id="hoursPerDay" min="1" max="24" value="8.75" step="0.25"></div>
-    </div>
-  </div>
-
-  <p class="section-label section-gap">Complexity distribution</p>
-  <div class="card">
-    <div class="dual-slider-wrap">
-      <div class="dual-slider-track-wrap">
-        <div class="dual-slider-bg"></div>
-        <div class="dual-slider-fill" id="sliderFill"></div>
-        <input type="range" id="sliderA" min="0" max="100" value="25" step="5">
-        <input type="range" id="sliderB" min="0" max="100" value="75" step="5">
+</header>
+<div class="container">
+  <div style="display:flex;gap:12px;align-items:stretch;margin-bottom:12px;">
+    <div style="flex:0 0 160px;display:flex;flex-direction:column;">
+      <p class="section-label section-gap">Scope</p>
+      <div class="card" style="margin-bottom:0;flex:1;">
+        <div class="people-label" style="margin-bottom:6px;">Total screens</div>
+        <input type="number" id="screensInput" min="1" max="500" value="8" step="1" oninput="setScreens(this.value)" style="width:100%;font-size:28px;font-weight:500;text-align:left;padding:8px;border:0.5px solid #b4b2a9;border-radius:8px;background:#f5f4ed;color:#1B365D;font-family:inherit;">
       </div>
-      <div class="dual-slider-pcts">
-        <div class="dual-slider-pct">Simple <strong id="pctSimple">25%</strong><span class="pct-screens" id="scrSimple"></span></div>
-        <div class="dual-slider-pct">Medium <strong id="pctMedium">50%</strong><span class="pct-screens" id="scrMedium"></span></div>
-        <div class="dual-slider-pct">High <strong id="pctHigh">25%</strong><span class="pct-screens" id="scrHigh"></span></div>
+    </div>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;">
+      <p class="section-label section-gap">Complexity distribution</p>
+      <div class="card" style="margin-bottom:0;flex:1;">
+        <div class="dual-slider-wrap">
+          <div class="dual-slider-track-wrap">
+            <div class="dual-slider-bg"></div>
+            <div class="dual-slider-fill" id="sliderFill"></div>
+            <input type="range" id="sliderA" min="0" max="100" value="25" step="5">
+            <input type="range" id="sliderB" min="0" max="100" value="75" step="5">
+          </div>
+          <div class="dual-slider-pcts">
+            <div class="dual-slider-pct">Simple <strong id="pctSimple">25%</strong><span class="pct-screens" id="scrSimple"></span></div>
+            <div class="dual-slider-pct">Medium <strong id="pctMedium">50%</strong><span class="pct-screens" id="scrMedium"></span></div>
+            <div class="dual-slider-pct">High <strong id="pctHigh">25%</strong><span class="pct-screens" id="scrHigh"></span></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -300,38 +339,38 @@
   <p class="section-label section-gap">Activities <span style="font-size:12px;font-weight:400;text-transform:none;letter-spacing:0;color:#b4b2a9">days / screen per complexity</span></p>
   <div class="card">
     <table class="activities-table">
-      <thead><tr><th>Activity</th><th>Simple</th><th>Medium</th><th>High</th></tr></thead>
+      <thead><tr><th>Activity</th><th>Simple</th><th>Medium</th><th>High</th><th style="text-align:right;color:#b4b2a9;font-weight:400;">Hrs</th></tr></thead>
       <tbody id="activitiesBody"></tbody>
     </table>
-  </div>
-
-  <p class="section-label section-gap">Team</p>
-  <div class="card">
-    <div class="team-layout">
-      <div class="people-block">
-        <div class="people-label">People</div>
-        <div class="people-stepper">
-          <button class="step-btn" onclick="changePeople(-1)">−</button>
-          <div class="people-count" id="peopleCount">1</div>
-          <button class="step-btn" onclick="changePeople(1)">+</button>
-        </div>
-      </div>
-      <div class="capacity-block"><div class="capacity-formula" id="formulaDisplay"></div></div>
+    <div class="results-grid" style="margin-top:16px;">
+      <div class="result-card"><div class="result-val accent" id="resHours">-</div><div class="result-label">Total hours</div></div>
+      <div class="result-card"><div class="result-val" id="resDays">-</div><div class="result-label">Person days</div></div>
+      <div class="result-card"><div class="result-val" id="resWeeks">-</div><div class="result-label">Person weeks</div></div>
+      <div class="result-card"><div class="result-val" id="resMonths">-</div><div class="result-label">Person months</div></div>
     </div>
   </div>
 
   <p class="section-label section-gap">Estimate</p>
   <div class="card">
-    <div class="buffer-row">
-      <span class="buffer-label">Buffer</span>
-      <input type="range" min="0" max="50" value="10" step="5" id="bufferSlider" oninput="syncBuffer()">
-      <span class="buffer-val" id="bufferVal">10%</span>
-    </div>
-    <div class="results-grid">
-      <div class="result-card"><div class="result-val accent" id="resHours">-</div><div class="result-label">Total hours</div></div>
-      <div class="result-card"><div class="result-val" id="resDays">-</div><div class="result-label">Solo days</div></div>
-      <div class="result-card"><div class="result-val" id="resWeeks">-</div><div class="result-label">Solo weeks</div></div>
-      <div class="result-card"><div class="result-val" id="resMonths">-</div><div class="result-label">Solo months</div></div>
+    <div class="est-controls">
+      <div class="est-ctrl">
+        <div class="est-ctrl-label">Hours / day</div>
+        <input type="number" id="hoursPerDay" min="1" max="24" value="8.75" step="0.25" class="big-number-input">
+      </div>
+      <div class="est-ctrl" style="position:relative;">
+        <div class="est-ctrl-label">
+          People
+          <button class="info-btn" onclick="togglePeopleInfo(event)" title="Capacity formula">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M8 7.5v4M8 5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <input type="number" id="peopleInput" min="1" max="20" value="1" step="1" class="big-number-input" oninput="setPeople(this.value)">
+        <div class="people-popover" id="peoplePopover"></div>
+      </div>
+      <div class="est-ctrl">
+        <div class="est-ctrl-label">Buffer %</div>
+        <input type="number" id="bufferInput" min="0" max="50" value="10" step="5" class="big-number-input" oninput="syncBuffer()">
+      </div>
     </div>
     <div class="section-divider"><div class="section-divider-line"></div><span id="teamDividerLabel">with team</span><div class="section-divider-line"></div></div>
     <div class="team-adjusted">
@@ -392,6 +431,7 @@ const ACTIVITIES = [
 
 let activities = ACTIVITIES.map(g => ({ group: g.group, items: g.items.map(a => ({...a})) }));
 let people = 1;
+let totalScreens = 8;
 let lastResult = {};
 const MIN_GAP = 5;
 const sliderA = document.getElementById('sliderA');
@@ -421,8 +461,11 @@ sliderB.addEventListener('input', () => {
   updateSliderUI();
 });
 
-function syncBuffer() {
-  document.getElementById('bufferVal').textContent = document.getElementById('bufferSlider').value + '%';
+function syncBuffer() { calculate(); }
+
+function setPeople(val) {
+  people = Math.max(1, Math.min(20, parseInt(val) || 1));
+  renderFormulaDisplay();
   calculate();
 }
 
@@ -438,7 +481,7 @@ const FORMULA_RULES = [
 
 function renderFormulaDisplay() {
   const eff = effectiveCapacity(people);
-  document.getElementById('formulaDisplay').innerHTML = FORMULA_RULES.map(r => {
+  document.getElementById('peoplePopover').innerHTML = FORMULA_RULES.map(r => {
     const active = r.fn(people);
     return `<div class="formula-row ${active ? 'formula-active' : ''}">
       <span class="formula-label">${r.label}</span>
@@ -454,6 +497,20 @@ function changePeople(delta) {
   renderFormulaDisplay(); calculate();
 }
 
+function setScreens(val) {
+  totalScreens = Math.max(1, Math.min(500, parseInt(val) || 1));
+  calculate();
+}
+
+function togglePeopleInfo(e) {
+  e.stopPropagation();
+  document.getElementById('peoplePopover').classList.toggle('open');
+}
+
+document.addEventListener('click', () => {
+  document.getElementById('peoplePopover').classList.remove('open');
+});
+
 function allItems() { return activities.flatMap(g => g.items); }
 
 function renderActivities() {
@@ -462,7 +519,7 @@ function renderActivities() {
   activities.forEach(group => {
     const hr = document.createElement('tr');
     hr.className = 'group-header';
-    hr.innerHTML = `<td colspan="4">${group.group}</td>`;
+    hr.innerHTML = `<td colspan="5">${group.group}</td>`;
     tbody.appendChild(hr);
     group.items.forEach(act => {
       const gi = allItems().indexOf(act);
@@ -474,9 +531,10 @@ function renderActivities() {
             <span class="activity-name">${act.name}</span>
           </div>
         </td>
-        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.s}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'s',this.value)"></td>
-        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.m}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'m',this.value)"></td>
-        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.h}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'h',this.value)"></td>
+        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.s}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'s',this.value)"><div id="act-s-hrs-${gi}" style="font-size:10px;color:#b4b2a9;margin-top:2px;min-height:13px;"></div></td>
+        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.m}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'m',this.value)"><div id="act-m-hrs-${gi}" style="font-size:10px;color:#b4b2a9;margin-top:2px;min-height:13px;"></div></td>
+        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.h}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'h',this.value)"><div id="act-h-hrs-${gi}" style="font-size:10px;color:#b4b2a9;margin-top:2px;min-height:13px;"></div></td>
+        <td id="act-hrs-${gi}" style="text-align:right;font-size:12px;color:#b4b2a9;white-space:nowrap;padding-right:4px;"></td>
       `;
       tbody.appendChild(tr);
     });
@@ -487,9 +545,9 @@ function toggleActivity(gi) { allItems()[gi].on = !allItems()[gi].on; renderActi
 function updateHrs(gi, tier, val) { allItems()[gi][tier] = parseFloat(val) || 0; calculate(); }
 
 function calculate() {
-  const screens = parseInt(document.getElementById('totalScreens').value) || 0;
+  const screens = totalScreens;
   const hpd     = parseFloat(document.getElementById('hoursPerDay').value) || 8.75;
-  const bufPct  = parseInt(document.getElementById('bufferSlider').value) || 0;
+  const bufPct  = parseInt(document.getElementById('bufferInput').value) || 0;
   const a = parseInt(sliderA.value), b = parseInt(sliderB.value);
   const sf = a / 100, mf = (b - a) / 100, hf = (100 - b) / 100;
   const sS = screens * sf, mS = screens * mf, hS = screens * hf;
@@ -498,13 +556,31 @@ function calculate() {
   document.getElementById('scrHigh').textContent   = '· ' + Math.round(hS);
 
   let breakdown = [], totalDays = 0;
+  allItems().forEach((act, gi) => {
+    ['', 's-', 'm-', 'h-'].forEach(p => {
+      const el = document.getElementById(`act-${p}hrs-${gi}`);
+      if (el) el.textContent = '';
+    });
+  });
   activities.forEach(group => {
     group.items.forEach(act => {
+      const gi = allItems().indexOf(act);
       if (!act.on) return;
-      const days = sS * act.s + mS * act.m + hS * act.h;
-      const hrs  = days * hpd;
+      const sHrs = sS * act.s * hpd;
+      const mHrs = mS * act.m * hpd;
+      const hHrs = hS * act.h * hpd;
+      const hrs  = sHrs + mHrs + hHrs;
+      const days = hrs / hpd;
       breakdown.push({ name: act.name, hrs, days, group: group.group });
       totalDays += days;
+      const tot = document.getElementById(`act-hrs-${gi}`);
+      if (tot) tot.textContent = Math.round(hrs) + ' hrs';
+      const sEl = document.getElementById(`act-s-hrs-${gi}`);
+      if (sEl && Math.round(sHrs)) sEl.textContent = Math.round(sHrs) + 'h';
+      const mEl = document.getElementById(`act-m-hrs-${gi}`);
+      if (mEl && Math.round(mHrs)) mEl.textContent = Math.round(mHrs) + 'h';
+      const hEl = document.getElementById(`act-h-hrs-${gi}`);
+      if (hEl && Math.round(hHrs)) hEl.textContent = Math.round(hHrs) + 'h';
     });
   });
 
@@ -523,8 +599,13 @@ function calculate() {
   document.getElementById('teamDaysSub').textContent = people > 1 ? `${people} people, ${eff.toFixed(1)}x capacity` : 'solo';
   document.getElementById('teamWeeks').textContent  = (teamDays / 5).toFixed(1);
   document.getElementById('teamMonths').textContent = (teamDays / 5 / 4.33).toFixed(1);
-  document.getElementById('teamDividerLabel').textContent =
-    people === 1 ? 'solo (same as above)' : `${people} people, ${eff.toFixed(1)}x effective capacity`;
+  const dividerEl = document.getElementById('teamDividerLabel').closest('.section-divider');
+  if (people === 1) {
+    dividerEl.style.display = 'none';
+  } else {
+    dividerEl.style.display = 'flex';
+    document.getElementById('teamDividerLabel').textContent = `${people} people, ${eff.toFixed(1)}x effective capacity`;
+  }
 
   lastResult = { screens, hpd, bufPct, sf, mf, hf, people, eff, totalHrs, totalDays, withBufHrs, withBufDays, soloDays, teamDays, breakdown };
 
@@ -533,12 +614,12 @@ function calculate() {
     let html = '';
     if (b.group !== lastGroup) {
       if (lastGroup !== null) html += `<div style="height:4px"></div>`;
-      html += `<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:#b4b2a9;padding:8px 0 2px;${lastGroup !== null ? 'border-top:0.5px solid #d3d1c7;' : ''}">${b.group}</div>`;
+      html += `<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:#b4b2a9;padding:${lastGroup !== null ? '16px' : '4px'} 0 2px;">${b.group}</div>`;
       lastGroup = b.group;
     }
     html += `<div class="breakdown-row"><span class="breakdown-name">${b.name}</span><span class="breakdown-hrs">${b.days.toFixed(1)} days · ${Math.round(b.hrs)} hrs</span></div>`;
     return html;
-  }).join('') + (bufPct > 0 ? `<div class="breakdown-row" style="border-top:0.5px solid #d3d1c7;">
+  }).join('') + (bufPct > 0 ? `<div class="breakdown-row">
     <span class="breakdown-name" style="color:#b4b2a9">Buffer (${bufPct}%)</span>
     <span class="breakdown-hrs" style="color:#b4b2a9">+${(withBufDays - totalDays).toFixed(1)} days · +${Math.round(withBufHrs - totalHrs)} hrs</span>
   </div>` : '');
@@ -696,9 +777,7 @@ function deleteModalActivity(gi, ai) {
   renderModalBody();
 }
 
-['totalScreens','hoursPerDay'].forEach(id =>
-  document.getElementById(id).addEventListener('input', calculate)
-);
+document.getElementById('hoursPerDay').addEventListener('input', calculate);
 loadConfig();
 renderActivities();
 renderFormulaDisplay();
