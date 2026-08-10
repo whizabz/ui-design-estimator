@@ -305,6 +305,22 @@
   }
   .modal-name-input:focus { outline: none; border-color: #1B365D; }
   .modal-name-input::placeholder { color: #b4b2a9; font-weight: 400; }
+  .estimate-name-row {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .estimate-name-input {
+    flex: 1; font-size: 15px; font-weight: 500; padding: 8px 10px;
+    border: 0.5px solid #b4b2a9; border-radius: 8px;
+    background: #f5f4ed; color: #2c2c2a; font-family: inherit;
+  }
+  .estimate-name-input:focus { outline: none; border-color: #1B365D; }
+  .estimate-name-input::placeholder { color: #b4b2a9; font-weight: 400; }
+  .randomize-name-btn {
+    flex-shrink: 0; width: 32px; height: 32px; border: 0.5px solid #b4b2a9;
+    background: #f5f4ed; cursor: pointer; color: #b4b2a9; border-radius: 8px; padding: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .randomize-name-btn:hover { color: #2c2c2a; border-color: #2c2c2a; }
 </style>
 </head>
 <body>
@@ -320,6 +336,15 @@
   </div>
 </header>
 <div class="container">
+  <div class="card" style="margin-bottom:12px;">
+    <div class="people-label" style="margin-bottom:6px;">Name</div>
+    <div class="estimate-name-row">
+      <input type="text" id="estimateName" class="estimate-name-input" placeholder="Estimate name">
+      <button class="randomize-name-btn" onclick="randomizeName()" title="Generate a new name">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      </button>
+    </div>
+  </div>
   <div style="display:flex;gap:12px;align-items:stretch;margin-bottom:12px;">
     <div style="flex:0 0 160px;display:flex;flex-direction:column;">
       <p class="section-label section-gap">Scope</p>
@@ -680,7 +705,14 @@ async function downloadExcel() {
     { width: 12 }, { width: 12 }, { width: 12 }, { width: 12 }
   ];
 
-  boldRow(ws, ['UI Design Estimate']);
+  const estimateName = document.getElementById('estimateName').value.trim() || 'UI Design Estimate';
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+
+  boldRow(ws, [estimateName]);
+  const genRow = ws.addRow([`Generated ${dateStr}, ${timeStr}`]);
+  genRow.getCell('A').font = { italic: true, color: { argb: 'FFB4B2A9' }, name: FONT, size: 10 };
   ws.addRow([]);
 
   // SCOPE
@@ -768,7 +800,8 @@ async function downloadExcel() {
   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'ui-design-estimate.xlsx';
+  const slug = estimateName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  a.download = `${slug || 'ui-design-estimate'}.xlsx`;
   a.click();
   URL.revokeObjectURL(a.href);
 }
@@ -877,11 +910,21 @@ function deleteModalActivity(gi, ai) {
   renderModalBody();
 }
 
+const NAME_ADJS = ['Agile','Atomic','Bold','Bright','Calm','Clean','Clever','Cosmic','Crisp','Digital','Dynamic','Epic','Fluid','Fresh','Grand','Lean','Lively','Modern','Nimble','Polished','Quick','Sharp','Sleek','Smooth','Solid','Swift','Vivid','Zen'];
+const NAME_NOUNS = ['Atlas','Aurora','Blueprint','Canvas','Circuit','Cobalt','Compass','Core','Delta','Echo','Ember','Flow','Forge','Frame','Galaxy','Grid','Harbor','Horizon','Loop','Mosaic','Motion','Nexus','Orbit','Palette','Prism','Pulse','Quest','Signal','Spark','Sprint','Summit','Surge','Tempo','Vector','Vision','Wave','Zenith'];
+
+function randomName() {
+  return NAME_ADJS[Math.floor(Math.random() * NAME_ADJS.length)] + ' ' +
+         NAME_NOUNS[Math.floor(Math.random() * NAME_NOUNS.length)];
+}
+function randomizeName() { document.getElementById('estimateName').value = randomName(); }
+
 document.getElementById('hoursPerDay').addEventListener('input', calculate);
 loadConfig();
 renderActivities();
 renderFormulaDisplay();
 updateSliderUI();
+randomizeName();
 </script>
 </body>
 </html>
