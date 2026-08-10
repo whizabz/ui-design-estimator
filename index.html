@@ -800,8 +800,7 @@ async function downloadExcel() {
   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  const slug = estimateName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-  a.download = `${slug || 'ui-design-estimate'}.xlsx`;
+  a.download = `${estimateName || 'UI Design Estimate'} - UI Design Estimate.xlsx`;
   a.click();
   URL.revokeObjectURL(a.href);
 }
