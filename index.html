@@ -73,7 +73,7 @@
   .dual-slider-pct strong { font-weight: 500; color: #2c2c2a; }
   .buffer-row {
     display: flex; align-items: center; gap: 14px;
-    padding: 12px 0; border-top: 0.5px solid #d3d1c7; border-bottom: 0.5px solid #d3d1c7; margin: 12px 0;
+    padding: 12px 0; border-bottom: 0.5px solid #d3d1c7; margin: 0 0 12px;
   }
   .buffer-label { font-size: 13px; color: #888780; white-space: nowrap; }
   .buffer-row input[type=range] { flex: 1; }
@@ -238,16 +238,16 @@
 
   <p class="section-label section-gap">Estimate</p>
   <div class="card">
+    <div class="buffer-row">
+      <span class="buffer-label">Buffer</span>
+      <input type="range" min="0" max="50" value="10" step="5" id="bufferSlider" oninput="syncBuffer()">
+      <span class="buffer-val" id="bufferVal">10%</span>
+    </div>
     <div class="results-grid">
       <div class="result-card"><div class="result-val accent" id="resHours">-</div><div class="result-label">Total hours</div></div>
       <div class="result-card"><div class="result-val" id="resDays">-</div><div class="result-label">Solo days</div></div>
       <div class="result-card"><div class="result-val" id="resWeeks">-</div><div class="result-label">Solo weeks</div></div>
       <div class="result-card"><div class="result-val" id="resMonths">-</div><div class="result-label">Solo months</div></div>
-    </div>
-    <div class="buffer-row">
-      <span class="buffer-label">Buffer</span>
-      <input type="range" min="0" max="50" value="10" step="5" id="bufferSlider" oninput="syncBuffer()">
-      <span class="buffer-val" id="bufferVal">10%</span>
     </div>
     <div class="section-divider"><div class="section-divider-line"></div><span id="teamDividerLabel">with team</span><div class="section-divider-line"></div></div>
     <div class="team-adjusted">
@@ -275,16 +275,16 @@ const ACTIVITIES = [
     { id: 'wireframe',   name: 'Wireframe',                on: true,  s: 0.5,  m: 1.0,  h: 2.0 },
     { id: 'visual',      name: 'Visual design',            on: true,  s: 0.5,  m: 1.0,  h: 2.0 },
     { id: 'content',     name: 'Content design',           on: false, s: 0.25, m: 0.5,  h: 1.0 },
-    { id: 'prototype',   name: 'Prototype',                on: true,  s: 0.25, m: 0.5,  h: 1.0 },
+    { id: 'prototype',   name: 'Prototype',                on: true,  s: 0.5,  m: 1.0,  h: 1.0 },
   ]},
   { group: 'Validation', items: [
     { id: 'usertesting', name: 'Usability testing',        on: false, s: 0.5,  m: 1.0,  h: 1.5 },
-    { id: 'feedback',    name: 'Feedback iteration',       on: true,  s: 0.5,  m: 1.0,  h: 1.5 },
+    { id: 'feedback',    name: 'Feedback iteration',       on: true,  s: 1.0,  m: 2.0,  h: 2.0 },
   ]},
   { group: 'Delivery', items: [
-    { id: 'a11y',        name: 'Accessibility annotation', on: true,  s: 0.25, m: 0.5,  h: 0.5 },
-    { id: 'handoff',     name: 'Dev handoff',              on: true,  s: 0.25, m: 0.25, h: 0.5 },
-    { id: 'designqa',    name: 'Design QA',                on: true,  s: 0.25, m: 0.5,  h: 1.0 },
+    { id: 'a11y',        name: 'Accessibility annotation', on: false, s: 0.25, m: 0.5,  h: 0.5 },
+    { id: 'handoff',     name: 'Dev handoff',              on: true,  s: 0.5,  m: 0.5,  h: 0.5 },
+    { id: 'designqa',    name: 'Design QA',                on: false, s: 0.25, m: 0.5,  h: 1.0 },
   ]},
 ];
 
@@ -369,8 +369,7 @@ function renderActivities() {
         <td>
           <div class="activity-toggle" onclick="toggleActivity(${gi})">
             <span class="toggle-pill ${act.on ? 'on' : ''}"></span>
-            <span class="activity-name ${act.on ? '' : 'off'}">${act.name}</span>
-            ${!act.on ? '<span class="off-badge">off</span>' : ''}
+            <span class="activity-name">${act.name}</span>
           </div>
         </td>
         <td style="text-align:center"><input class="hrs-input" type="number" value="${act.s}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'s',this.value)"></td>
