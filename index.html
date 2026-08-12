@@ -102,13 +102,35 @@
   .buffer-row input[type=range] { flex: 1; }
   .buffer-val { font-size: 13px; font-weight: 500; color: #2c2c2a; min-width: 36px; text-align: right; }
   .activities-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .activities-table col.col-num { width: 88px; }
+  .activities-table col.col-pct { width: 96px; }
+  .activities-table col.col-hrs { width: 60px; }
   .activities-table th {
     font-size: 11px; font-weight: 500; text-transform: uppercase;
     letter-spacing: 0.06em; color: #888780; padding: 4px 8px 8px; text-align: center;
   }
   .activities-table th:first-child { text-align: left; padding-left: 0; }
+  .activities-table th.col-hrs { text-align: right; color: #b4b2a9; font-weight: 400; padding-right: 4px; }
   .activities-table td { padding: 10px 8px; vertical-align: middle; }
   .activities-table td:first-child { padding-left: 0; }
+  .activities-table td.col-hrs { text-align: right; font-size: 12px; color: #b4b2a9; white-space: nowrap; padding-right: 4px; }
+  .activities-table td.num-cell { padding: 10px 8px; }
+  .activities-table .num-cell-inner {
+    display: flex; flex-direction: column; align-items: center;
+    width: 52px; margin: 0 auto;
+  }
+  .activities-table .num-cell-inner input {
+    width: 52px; max-width: 52px; flex-shrink: 0;
+  }
+  .activities-table .num-cell-inner.pct-cell-inner {
+    width: 64px;
+  }
+  .activities-table .num-cell-inner.pct-cell-inner input {
+    width: 64px; max-width: 64px;
+  }
+  .activities-table .num-sublabel {
+    font-size: 10px; color: #b4b2a9; margin-top: 2px; min-height: 13px; line-height: 13px;
+  }
   .group-header td {
     padding: 20px 0 4px; font-size: 10px; font-weight: 500; text-transform: uppercase;
     letter-spacing: 0.08em; color: #b4b2a9;
@@ -140,6 +162,15 @@
   }
   .hrs-input:disabled { opacity: 0.3; cursor: not-allowed; }
   .hrs-input:focus { outline: none; }
+  .pct-input {
+    width: 64px; padding: 4px 6px; font-size: 13px; border-radius: 8px;
+    border: 0.5px solid #d3d1c7; background: #f5f4ed; color: #2c2c2a;
+    text-align: left; font-family: inherit;
+    -moz-appearance: textfield; appearance: textfield;
+  }
+  .pct-input:disabled { opacity: 0.3; cursor: not-allowed; }
+  .pct-input:focus { outline: none; }
+  .pct-input::-webkit-inner-spin-button { display: none; }
   .team-layout { display: flex; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
   .people-block { display: flex; flex-direction: column; gap: 6px; }
   .people-label { font-size: 12px; color: #888780; }
@@ -379,10 +410,15 @@
     </div>
   </div>
 
-  <p class="section-label section-gap">Activities <span style="font-size:12px;font-weight:400;text-transform:none;letter-spacing:0;color:#b4b2a9">days / screen per complexity</span></p>
+  <p class="section-label section-gap">Activities <span style="font-size:12px;font-weight:400;text-transform:none;letter-spacing:0;color:#b4b2a9">days / screen per complexity · % screens = share of scope</span></p>
   <div class="card">
     <table class="activities-table">
-      <thead><tr><th>Activity</th><th>Low</th><th>Medium</th><th>High</th><th style="text-align:right;color:#b4b2a9;font-weight:400;">Hrs</th></tr></thead>
+      <colgroup>
+        <col>
+        <col class="col-num"><col class="col-num"><col class="col-num"><col class="col-pct">
+        <col class="col-hrs">
+      </colgroup>
+      <thead><tr><th>Activity</th><th>Low</th><th>Medium</th><th>High</th><th>% Screens</th><th class="col-hrs">Hrs</th></tr></thead>
       <tbody id="activitiesBody"></tbody>
     </table>
     <div class="results-grid" style="margin-top:16px;">
@@ -442,6 +478,7 @@
       <span class="modal-col-header">Low</span>
       <span class="modal-col-header">Medium</span>
       <span class="modal-col-header">High</span>
+      <span class="modal-col-header">%</span>
     </div>
     <div id="modalBody"></div>
     <div class="modal-footer">
@@ -454,19 +491,20 @@
 <script>
 const ACTIVITIES = [
   { group: 'Design', items: [
-    { id: 'wireframe',   name: 'Wireframe',                on: true,  s: 0.5,  m: 1.0,  h: 2.0 },
-    { id: 'visual',      name: 'Visual design',            on: true,  s: 0.5,  m: 1.0,  h: 2.0 },
-    { id: 'content',     name: 'Content design',           on: false, s: 0.25, m: 0.5,  h: 1.0 },
-    { id: 'prototype',   name: 'Prototype',                on: true,  s: 0.5,  m: 1.0,  h: 1.0 },
+    { id: 'wireframe',   name: 'Wireframe',                on: true,  s: 0.5,  m: 1.0,  h: 2.0,  pct: 100 },
+    { id: 'visual',      name: 'Visual design',            on: true,  s: 0.5,  m: 1.0,  h: 2.0,  pct: 100 },
+    { id: 'rtl',         name: 'RTL support',              on: false, s: 0.25, m: 0.5,  h: 1.0,  pct: 25  },
+    { id: 'content',     name: 'Content design',           on: false, s: 0.25, m: 0.5,  h: 1.0,  pct: 100 },
+    { id: 'prototype',   name: 'Prototype',                on: true,  s: 0.5,  m: 1.0,  h: 1.0,  pct: 100 },
   ]},
   { group: 'Validation', items: [
-    { id: 'usertesting', name: 'Usability testing',        on: false, s: 0.5,  m: 1.0,  h: 1.5 },
-    { id: 'feedback',    name: 'Feedback iteration',       on: true,  s: 1.0,  m: 2.0,  h: 2.0 },
+    { id: 'usertesting', name: 'Usability testing',        on: false, s: 0.5,  m: 1.0,  h: 1.5,  pct: 100 },
+    { id: 'feedback',    name: 'Feedback iteration',       on: true,  s: 1.0,  m: 2.0,  h: 2.0,  pct: 100 },
   ]},
   { group: 'Delivery', items: [
-    { id: 'a11y',        name: 'Accessibility annotation', on: false, s: 0.25, m: 0.5,  h: 0.5 },
-    { id: 'handoff',     name: 'Dev handoff',              on: true,  s: 0.5,  m: 0.5,  h: 0.5 },
-    { id: 'designqa',    name: 'Design QA',                on: false, s: 0.25, m: 0.5,  h: 1.0 },
+    { id: 'a11y',        name: 'Accessibility annotation', on: false, s: 0.25, m: 0.5,  h: 0.5,  pct: 100 },
+    { id: 'handoff',     name: 'Dev handoff',              on: true,  s: 0.5,  m: 0.5,  h: 0.5,  pct: 100 },
+    { id: 'designqa',    name: 'Design QA',                on: false, s: 0.25, m: 0.5,  h: 1.0,  pct: 100 },
   ]},
 ];
 
@@ -585,7 +623,7 @@ function renderActivities() {
   activities.forEach(group => {
     const hr = document.createElement('tr');
     hr.className = 'group-header';
-    hr.innerHTML = `<td colspan="5">${group.group}</td>`;
+    hr.innerHTML = `<td colspan="6">${group.group}</td>`;
     tbody.appendChild(hr);
     group.items.forEach(act => {
       const gi = allItems().indexOf(act);
@@ -597,10 +635,11 @@ function renderActivities() {
             <span class="activity-name">${act.name}</span>
           </div>
         </td>
-        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.s}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'s',this.value)"><div id="act-s-hrs-${gi}" style="font-size:10px;color:#b4b2a9;margin-top:2px;min-height:13px;"></div></td>
-        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.m}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'m',this.value)"><div id="act-m-hrs-${gi}" style="font-size:10px;color:#b4b2a9;margin-top:2px;min-height:13px;"></div></td>
-        <td style="text-align:center"><input class="hrs-input" type="number" value="${act.h}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'h',this.value)"><div id="act-h-hrs-${gi}" style="font-size:10px;color:#b4b2a9;margin-top:2px;min-height:13px;"></div></td>
-        <td id="act-hrs-${gi}" style="text-align:right;font-size:12px;color:#b4b2a9;white-space:nowrap;padding-right:4px;"></td>
+        <td class="num-cell"><div class="num-cell-inner"><input class="hrs-input" type="number" value="${act.s}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'s',this.value)"><div id="act-s-hrs-${gi}" class="num-sublabel"></div></div></td>
+        <td class="num-cell"><div class="num-cell-inner"><input class="hrs-input" type="number" value="${act.m}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'m',this.value)"><div id="act-m-hrs-${gi}" class="num-sublabel"></div></div></td>
+        <td class="num-cell"><div class="num-cell-inner"><input class="hrs-input" type="number" value="${act.h}" min="0" max="30" step="0.25" ${act.on ? '' : 'disabled'} onchange="updateHrs(${gi},'h',this.value)"><div id="act-h-hrs-${gi}" class="num-sublabel"></div></div></td>
+        <td class="num-cell"><div class="num-cell-inner pct-cell-inner"><input class="pct-input" type="number" value="${act.pct}" min="0" max="100" step="5" ${act.on ? '' : 'disabled'} onchange="updatePct(${gi},this.value)"><div class="num-sublabel"></div></div></td>
+        <td id="act-hrs-${gi}" class="col-hrs"></td>
       `;
       tbody.appendChild(tr);
     });
@@ -609,6 +648,7 @@ function renderActivities() {
 
 function toggleActivity(gi) { allItems()[gi].on = !allItems()[gi].on; renderActivities(); calculate(); }
 function updateHrs(gi, tier, val) { allItems()[gi][tier] = parseFloat(val) || 0; calculate(); }
+function updatePct(gi, val) { allItems()[gi].pct = Math.max(0, Math.min(100, parseFloat(val) || 100)); calculate(); }
 
 function calculate() {
   const screens = totalScreens;
@@ -632,9 +672,10 @@ function calculate() {
     group.items.forEach(act => {
       const gi = allItems().indexOf(act);
       if (!act.on) return;
-      const sHrs = sS * act.s * hpd;
-      const mHrs = mS * act.m * hpd;
-      const hHrs = hS * act.h * hpd;
+      const pct = (act.pct ?? 100) / 100;
+      const sHrs = sS * pct * act.s * hpd;
+      const mHrs = mS * pct * act.m * hpd;
+      const hHrs = hS * pct * act.h * hpd;
       const hrs  = sHrs + mHrs + hHrs;
       const days = hrs / hpd;
       breakdown.push({ name: act.name, hrs, days, group: group.group });
@@ -702,7 +743,7 @@ async function downloadExcel() {
   const ws = wb.addWorksheet('Estimate');
   ws.columns = [
     { width: 36 }, { width: 12 }, { width: 12 }, { width: 12 },
-    { width: 12 }, { width: 12 }, { width: 12 }, { width: 12 }
+    { width: 10 }, { width: 12 }, { width: 12 }, { width: 12 }, { width: 12 }
   ];
 
   const estimateName = document.getElementById('estimateName').value.trim() || 'UI Design Estimate';
@@ -744,7 +785,7 @@ async function downloadExcel() {
   ws.addRow([]);
 
   // ACTIVITIES
-  boldRow(ws, ['ACTIVITIES', 'Low', 'Medium', 'High', 'Low hrs', 'Med hrs', 'High hrs', 'Total hrs']);
+  boldRow(ws, ['ACTIVITIES', 'Low', 'Medium', 'High', '% Screens', 'Low hrs', 'Med hrs', 'High hrs', 'Total hrs']);
   let firstActRow = null, lastActRow = null;
   activities.forEach(group => {
     const enabled = group.items.filter(a => a.on);
@@ -752,15 +793,17 @@ async function downloadExcel() {
     const gr = ws.addRow([group.group]);
     gr.getCell(1).font = { bold: true, name: FONT };
     enabled.forEach(act => {
-      const row = ws.addRow(['  ' + act.name, act.s, act.m, act.h, null, null, null, null]);
+      const row = ws.addRow(['  ' + act.name, act.s, act.m, act.h, (act.pct ?? 100) / 100, null, null, null, null]);
       const n = row.number;
       if (!firstActRow) firstActRow = n;
       lastActRow = n;
       ['B','C','D'].forEach(c => { row.getCell(c).numFmt = '0.00'; });
-      row.getCell('E').value = { formula: `${SL}*B${n}*${HPD}` }; row.getCell('E').numFmt = '0.0';
-      row.getCell('F').value = { formula: `${SM}*C${n}*${HPD}` }; row.getCell('F').numFmt = '0.0';
-      row.getCell('G').value = { formula: `${SH}*D${n}*${HPD}` }; row.getCell('G').numFmt = '0.0';
-      row.getCell('H').value = { formula: `E${n}+F${n}+G${n}` }; row.getCell('H').numFmt = '0.0';
+      row.getCell('E').numFmt = '0%';
+      const SP = `E${n}`;
+      row.getCell('F').value = { formula: `${SL}*B${n}*${SP}*${HPD}` }; row.getCell('F').numFmt = '0.0';
+      row.getCell('G').value = { formula: `${SM}*C${n}*${SP}*${HPD}` }; row.getCell('G').numFmt = '0.0';
+      row.getCell('H').value = { formula: `${SH}*D${n}*${SP}*${HPD}` }; row.getCell('H').numFmt = '0.0';
+      row.getCell('I').value = { formula: `F${n}+G${n}+H${n}` }; row.getCell('I').numFmt = '0.0';
     });
   });
   ws.addRow([]);
@@ -768,7 +811,7 @@ async function downloadExcel() {
   // RESULTS
   boldRow(ws, ['RESULTS']);
   const totRow = ws.addRow(['Total hours', null]);
-  totRow.getCell('B').value = { formula: `SUM(H${firstActRow}:H${lastActRow})*(1+${BUF})` };
+  totRow.getCell('B').value = { formula: `SUM(I${firstActRow}:I${lastActRow})*(1+${BUF})` };
   totRow.getCell('B').numFmt = '0';
   const TOT = `B${totRow.number}`;
 
@@ -788,11 +831,11 @@ async function downloadExcel() {
 
   // ── Sheet 2: Activity Config ──
   const ws2 = wb.addWorksheet('Activity Config');
-  ws2.columns = [{ width: 16 }, { width: 28 }, { width: 10 }, { width: 20 }, { width: 20 }, { width: 18 }];
+  ws2.columns = [{ width: 16 }, { width: 28 }, { width: 10 }, { width: 12 }, { width: 20 }, { width: 20 }, { width: 18 }];
   boldRow(ws2, ['Activity Configuration']);
   ws2.addRow([]);
-  boldRow(ws2, ['Group', 'Activity', 'Active', 'Days/screen Low', 'Days/screen Medium', 'Days/screen High']);
-  activities.forEach(g => g.items.forEach(act => ws2.addRow([g.group, act.name, act.on ? 'Yes' : 'No', act.s, act.m, act.h])));
+  boldRow(ws2, ['Group', 'Activity', 'Active', '% Screens', 'Days/screen Low', 'Days/screen Medium', 'Days/screen High']);
+  activities.forEach(g => g.items.forEach(act => ws2.addRow([g.group, act.name, act.on ? 'Yes' : 'No', act.pct ?? 100, act.s, act.m, act.h])));
 
   applyFont(ws);
   applyFont(ws2);
@@ -814,7 +857,20 @@ function saveConfig() {
 function loadConfig() {
   try {
     const saved = localStorage.getItem('uiEstimatorConfig');
-    if (saved) activities = JSON.parse(saved);
+    if (saved) {
+      activities = JSON.parse(saved);
+      activities.forEach(g => g.items.forEach(a => { if (a.pct == null) a.pct = 100; }));
+      ACTIVITIES.forEach(defGroup => {
+        let group = activities.find(g => g.group === defGroup.group);
+        if (!group) {
+          activities.push({ group: defGroup.group, items: defGroup.items.map(a => ({...a})) });
+          return;
+        }
+        defGroup.items.forEach(defAct => {
+          if (!group.items.some(a => a.id === defAct.id)) group.items.push({...defAct});
+        });
+      });
+    }
   } catch(e) {}
 }
 
@@ -868,6 +924,7 @@ function renderModalBody() {
           <input class="hrs-input" type="number" value="${act.s}" min="0" max="30" step="0.25" onchange="updateModalHrs(${gi},${ai},'s',this.value)">
           <input class="hrs-input" type="number" value="${act.m}" min="0" max="30" step="0.25" onchange="updateModalHrs(${gi},${ai},'m',this.value)">
           <input class="hrs-input" type="number" value="${act.h}" min="0" max="30" step="0.25" onchange="updateModalHrs(${gi},${ai},'h',this.value)">
+          <input class="pct-input" type="number" value="${act.pct ?? 100}" min="0" max="100" step="5" onchange="updateModalPct(${gi},${ai},this.value)">
           ${deleteBtn}
         </div>`;
       body.appendChild(row);
@@ -889,6 +946,10 @@ function updateModalHrs(gi, ai, tier, val) {
   modalState[gi].items[ai][tier] = parseFloat(val) || 0;
 }
 
+function updateModalPct(gi, ai, val) {
+  modalState[gi].items[ai].pct = Math.max(0, Math.min(100, parseFloat(val) || 100));
+}
+
 function updateModalName(gi, ai, val) {
   modalState[gi].items[ai].name = val;
 }
@@ -899,7 +960,7 @@ function addModalActivity() {
     customGroup = { group: 'Custom', items: [] };
     modalState.push(customGroup);
   }
-  customGroup.items.push({ id: 'custom_' + Date.now(), name: '', on: true, s: 0.5, m: 1.0, h: 2.0, custom: true });
+  customGroup.items.push({ id: 'custom_' + Date.now(), name: '', on: true, s: 0.5, m: 1.0, h: 2.0, pct: 100, custom: true });
   renderModalBody();
 }
 
