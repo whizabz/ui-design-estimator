@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:wght@500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -223,18 +224,29 @@
   .h2-sub { font-size: 13px; color: #888780; margin-bottom: 20px; }
   .setting-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #888780; }
   .setting-item input[type=number] { width: 60px; }
-  .download-btn {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; padding: 10px 16px; border-radius: 8px;
-    background: transparent; color: #1B365D;
-    font-size: 13px; font-weight: 500; font-family: inherit;
-    border: 1px solid #1B365D;
-    cursor: pointer; margin-top: 14px;
-    transition: background 0.15s, color 0.15s;
-    letter-spacing: 0.01em;
+  .file-actions {
+    display: flex; gap: 8px; margin-top: 14px;
   }
-  .download-btn:hover { background: #f0f3f8; }
-  .download-btn:active { transform: scale(0.99); }
+  .file-btn, .excel-btn {
+    flex: 1; min-width: 0;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 10px 10px; border-radius: 8px;
+    font-size: 12px; font-weight: 500; font-family: inherit;
+    cursor: pointer; transition: background 0.15s, color 0.15s;
+    letter-spacing: 0.01em; white-space: nowrap;
+  }
+  .file-btn {
+    background: transparent; color: #2c2c2a;
+    border: 0.5px solid #b4b2a9;
+  }
+  .file-btn:hover { background: #ece9e0; }
+  .file-btn:active, .excel-btn:active { transform: scale(0.99); }
+  .excel-btn {
+    background: transparent; color: #1B365D;
+    border: 1px solid #1B365D;
+  }
+  .excel-btn:hover { background: #f0f3f8; }
+  .file-btn svg, .excel-btn svg { flex-shrink: 0; }
   .est-controls { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 16px; }
   .est-ctrl { display: flex; flex-direction: row; align-items: center; gap: 8px; flex: 1; }
   .est-ctrl-label {
@@ -457,15 +469,25 @@
       <div class="result-card"><div class="result-val" id="teamWeeks" style="color:#1B365D">-</div><div class="result-label">Team weeks</div></div>
       <div class="result-card"><div class="result-val" id="teamMonths" style="color:#1B365D">-</div><div class="result-label">Team months</div></div>
     </div>
-    <button class="download-btn" onclick="downloadExcel()">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="1" width="14" height="14" rx="2" fill="#1D6F42"/>
-        <path d="M4 5h3.5M4 8h3.5M4 11h3.5" stroke="white" stroke-width="1" stroke-linecap="round"/>
-        <path d="M9 5h3M9 8h3M9 11h3" stroke="white" stroke-width="1" stroke-linecap="round"/>
-        <path d="M7.5 5v6M9 5v6" stroke="white" stroke-width="0.5" opacity="0.4"/>
-      </svg>
-      Download estimate as Excel
-    </button>
+    <div class="file-actions">
+      <button type="button" class="file-btn" onclick="triggerImportEstimate()">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Import Estimate
+      </button>
+      <button type="button" class="file-btn" onclick="exportEstimateFile()">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 10V2M5 5l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Export Estimate
+      </button>
+      <button type="button" class="excel-btn" onclick="downloadExcel()">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <rect x="1" y="1" width="14" height="14" rx="2" fill="#1D6F42"/>
+          <path d="M4 5h3.5M4 8h3.5M4 11h3.5" stroke="white" stroke-width="1" stroke-linecap="round"/>
+          <path d="M9 5h3M9 8h3M9 11h3" stroke="white" stroke-width="1" stroke-linecap="round"/>
+        </svg>
+        Export as Excel
+      </button>
+    </div>
+    <input type="file" id="estimateFileInput" accept=".uide.yaml,.yaml,.yml,text/yaml" hidden onchange="handleEstimateFileSelect(this)">
   </div>
 </div>
 
@@ -978,6 +1000,133 @@ function randomName() {
          NAME_NOUNS[Math.floor(Math.random() * NAME_NOUNS.length)];
 }
 function randomizeName() { document.getElementById('estimateName').value = randomName(); }
+
+const ESTIMATE_FORMAT = 'ui-design-estimator';
+const ESTIMATE_VERSION = 1;
+
+function sanitizeFileName(name) {
+  return name.replace(/[<>:"/\\|?*\x00-\x1f]/g, '').trim() || 'UI Design Estimate';
+}
+
+function getEstimateState() {
+  return {
+    name: document.getElementById('estimateName').value.trim(),
+    screens: totalScreens,
+    distribution: { sliderA: parseInt(sliderA.value), sliderB: parseInt(sliderB.value) },
+    hoursPerDay: parseFloat(document.getElementById('hoursPerDay').value) || 8.75,
+    people,
+    bufferPct: parseInt(document.getElementById('bufferInput').value) || 0,
+    activities: activities.map(g => ({
+      group: g.group,
+      items: g.items.map(a => ({ ...a }))
+    }))
+  };
+}
+
+function buildEstimateFile() {
+  return {
+    format: ESTIMATE_FORMAT,
+    version: ESTIMATE_VERSION,
+    exportedAt: new Date().toISOString(),
+    estimate: getEstimateState()
+  };
+}
+
+function exportEstimateFile() {
+  const payload = buildEstimateFile();
+  const safeName = sanitizeFileName(payload.estimate.name);
+  const text = jsyaml.dump(payload, { lineWidth: 100, noRefs: true, sortKeys: false });
+  const blob = new Blob([text], { type: 'text/yaml' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${safeName} - UI Design Estimate.uide.yaml`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function parseEstimateFile(text) {
+  const trimmed = text.trim();
+  if (!trimmed) throw new Error('File is empty.');
+  const data = jsyaml.load(trimmed);
+  if (!data || typeof data !== 'object') throw new Error('Invalid file contents.');
+  if (data.format !== ESTIMATE_FORMAT) throw new Error('Not a UI Design Estimator file.');
+  if (!data.estimate || typeof data.estimate !== 'object') throw new Error('Missing estimate data.');
+  if (data.version > ESTIMATE_VERSION) throw new Error('This file was created with a newer version of the tool.');
+  return data;
+}
+
+function normalizeImportedActivities(groups) {
+  if (!Array.isArray(groups) || !groups.length) throw new Error('Invalid activities.');
+  return groups.map(g => {
+    if (!g || typeof g.group !== 'string' || !Array.isArray(g.items) || !g.items.length) {
+      throw new Error('Invalid activity group.');
+    }
+    return {
+      group: g.group,
+      items: g.items.map(a => {
+        if (!a || typeof a.name !== 'string') throw new Error('Invalid activity.');
+        const item = {
+          id: typeof a.id === 'string' ? a.id : 'imported_' + Date.now() + '_' + Math.random().toString(36).slice(2),
+          name: a.name,
+          on: Boolean(a.on),
+          s: Math.max(0, parseFloat(a.s) || 0),
+          m: Math.max(0, parseFloat(a.m) || 0),
+          h: Math.max(0, parseFloat(a.h) || 0),
+          pct: Math.max(0, Math.min(100, parseFloat(a.pct) || 100))
+        };
+        if (a.custom) item.custom = true;
+        return item;
+      })
+    };
+  });
+}
+
+function applyEstimate(estimate) {
+  document.getElementById('estimateName').value = estimate.name || '';
+
+  totalScreens = Math.max(1, Math.min(500, parseInt(estimate.screens) || 1));
+  document.getElementById('screensInput').value = totalScreens;
+
+  const dist = estimate.distribution || {};
+  let a = parseInt(dist.sliderA);
+  let b = parseInt(dist.sliderB);
+  if (!Number.isFinite(a) || !Number.isFinite(b)) { a = 25; b = 75; }
+  a = Math.max(0, Math.min(100 - MIN_GAP, a));
+  b = Math.max(a + MIN_GAP, Math.min(100, b));
+  sliderA.value = a;
+  sliderB.value = b;
+
+  const hpd = parseFloat(estimate.hoursPerDay);
+  document.getElementById('hoursPerDay').value = Math.max(0.25, Math.min(24, Number.isFinite(hpd) ? hpd : 8.75));
+
+  people = Math.max(1, Math.min(20, parseInt(estimate.people) || 1));
+  document.getElementById('peopleInput').value = people;
+
+  const buf = parseInt(estimate.bufferPct);
+  document.getElementById('bufferInput').value = Math.max(0, Math.min(50, Number.isFinite(buf) ? buf : 0));
+
+  activities = normalizeImportedActivities(estimate.activities);
+  saveConfig();
+  renderActivities();
+  renderFormulaDisplay();
+  updateSliderUI();
+}
+
+function triggerImportEstimate() {
+  document.getElementById('estimateFileInput').click();
+}
+
+async function handleEstimateFileSelect(input) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  try {
+    const data = parseEstimateFile(await file.text());
+    applyEstimate(data.estimate);
+  } catch (e) {
+    alert('Could not import file: ' + (e.message || 'Invalid file.'));
+  }
+}
 
 document.getElementById('hoursPerDay').addEventListener('input', calculate);
 loadConfig();
